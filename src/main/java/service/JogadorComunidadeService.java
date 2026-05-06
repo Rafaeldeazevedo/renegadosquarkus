@@ -56,6 +56,11 @@ public class JogadorComunidadeService {
                 .toList();
     }
 
+    public TotalResponse contarPlayerStyles() {
+        Long total = maniaRepository.count();
+        return new TotalResponse(total);
+    }
+
     public List<ManiaResponse> listarManias(Long jogadorId, Long personagemId) {
         return maniaRepository.buscarPorJogadorEPersonagem(jogadorId, personagemId)
                 .stream()

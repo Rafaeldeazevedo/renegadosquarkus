@@ -55,6 +55,12 @@ public class JogadorComunidadeResource {
         return jogadorComunidadeService.listarPersonagensDoJogador(id);
     }
 
+    @GET
+    @Path("/player-styles/total")
+    public TotalResponse contarPlayerStyles() {
+        return jogadorComunidadeService.contarPlayerStyles();
+    }
+
     @PUT
     @Path("/{jogadorId}/personagens/{personagemId}/player-style")
     public PlayerStyleResponse salvarPlayerStyle(
