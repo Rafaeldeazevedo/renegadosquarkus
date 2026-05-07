@@ -2,13 +2,14 @@ package dto;
 
 
 public class LoginResponse {
+
     public Long id;
     public String nome;
     public String email;
     public String nickname;
     public Integer nivel;
     public Integer xp;
-
+    public String fotoPerfil;
 
     public LoginResponse(
             Long id,
@@ -16,7 +17,8 @@ public class LoginResponse {
             String email,
             String nickname,
             Integer nivel,
-            Integer xp
+            Integer xp,
+            String fotoPerfil
     ) {
         this.id = id;
         this.nome = nome;
@@ -24,6 +26,6 @@ public class LoginResponse {
         this.nickname = nickname;
         this.nivel = nivel;
         this.xp = xp;
+        this.fotoPerfil = fotoPerfil;
     }
-
 }
