@@ -9,6 +9,7 @@ public class LoginResponse {
     public Integer nivel;
     public Integer xp;
 
+
     public LoginResponse(
             Long id,
             String nome,

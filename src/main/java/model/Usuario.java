@@ -25,4 +25,7 @@ public class Usuario extends PanacheEntity {
 
         @Column(nullable = false)
         public Integer xp;
+
+        @Column(name = "foto_perfil", columnDefinition = "TEXT")
+        public String fotoPerfil;
     }
