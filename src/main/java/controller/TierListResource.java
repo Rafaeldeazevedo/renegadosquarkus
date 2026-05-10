@@ -21,6 +21,7 @@ public class TierListResource {
     @Inject
     TierListRepository tierListRepository;
 
+
     @POST
     @Transactional
     public Response criar(TierListRequest request) {
@@ -48,6 +49,17 @@ public class TierListResource {
                     .build();
         }
 
+        TierList existente = tierListRepository.buscarPorUsuarioESeason(
+                request.usuarioId,
+                request.season
+        );
+
+        if (existente != null) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity("Você já criou uma Tier List para esta season.")
+                    .build();
+        }
+
         TierList tierList = new TierList();
         tierList.usuarioId = request.usuarioId;
         tierList.nome = request.nome;
@@ -70,7 +82,7 @@ public class TierListResource {
                 .entity(tierList)
                 .build();
     }
-
+    
     @GET
     public Response listarTodas() {
         return Response.ok(tierListRepository.listAll()).build();
@@ -85,7 +97,7 @@ public class TierListResource {
     @GET
     @Path("/season/{season}")
     public Response listarPorSeason(@PathParam("season") String season) {
-        return Response.ok(tierListRepository.listarPorSeason(season)).build();
+        return Response.ok(tierListRepository.listarCardsPorSeason(season)).build();
     }
 
     @GET
@@ -98,5 +110,22 @@ public class TierListResource {
         }
 
         return Response.ok(tierList).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response excluir(@PathParam("id") Long id) {
+        TierList tierList = tierListRepository.findById(id);
+
+        if (tierList == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Tier List não encontrada.")
+                    .build();
+        }
+
+        tierListRepository.delete(tierList);
+
+        return Response.noContent().build();
     }
 }
