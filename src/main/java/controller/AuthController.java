@@ -4,6 +4,10 @@ import dto.AtualizarPerfilRequest;
 import dto.LoginRequest;
 import dto.LoginResponse;
 import dto.TrocarSenhaRequest;
+import dto.ValidarTokenResponse;
+import io.smallrye.jwt.build.Jwt;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -11,7 +15,11 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Usuario;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import repository.UsuarioRepository;
+
+import java.time.Duration;
+import java.util.Set;
 
 @Path("/auth")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -24,10 +32,21 @@ public class AuthController {
     @Inject
     UsuarioRepository usuarioRepository;
 
+    @Inject
+    JsonWebToken jwt;
+
     @POST
     @Path("/login")
+    @PermitAll
+    @Transactional
     public Response login(LoginRequest request) {
-        Usuario usuario = usuarioRepository.find("email", request.email).firstResult();
+        if (request == null || request.email == null || request.senha == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Informe email e senha.")
+                    .build();
+        }
+
+        Usuario usuario = usuarioRepository.buscarPorEmail(request.email);
 
         if (usuario == null) {
             return Response.status(Response.Status.UNAUTHORIZED)
@@ -41,6 +60,7 @@ public class AuthController {
                     .build();
         }
 
+        String token = gerarToken(usuario);
 
         LoginResponse response = new LoginResponse(
                 usuario.id,
@@ -50,15 +70,26 @@ public class AuthController {
                 usuario.nivel,
                 usuario.xp,
                 usuario.fotoPerfil,
+                token,
                 Boolean.TRUE.equals(usuario.senhaTemporaria)
         );
 
         return Response.ok(response).build();
-
     }
+
+    @GET
+    @Path("/validar-token")
+    @RolesAllowed("USER")
+    public Response validarToken() {
+        return Response.ok(new ValidarTokenResponse(true)).build();
+    }
+
     @GET
     @Path("/usuarios/{id}")
+    @RolesAllowed("USER")
     public LoginResponse buscarUsuarioPorId(@PathParam("id") Long id) {
+        validarUsuarioDoToken(id);
+
         Usuario usuario = entityManager.find(Usuario.class, id);
 
         if (usuario == null) {
@@ -73,17 +104,21 @@ public class AuthController {
                 usuario.nivel,
                 usuario.xp,
                 usuario.fotoPerfil,
-                usuario.senhaTemporaria
+                null,
+                Boolean.TRUE.equals(usuario.senhaTemporaria)
         );
     }
 
     @PUT
     @Path("/usuarios/{id}/perfil")
+    @RolesAllowed("USER")
     @Transactional
     public LoginResponse atualizarPerfil(
             @PathParam("id") Long id,
             AtualizarPerfilRequest request
     ) {
+        validarUsuarioDoToken(id);
+
         Usuario usuario = entityManager.find(Usuario.class, id);
 
         if (usuario == null) {
@@ -106,11 +141,14 @@ public class AuthController {
                 usuario.nivel,
                 usuario.xp,
                 usuario.fotoPerfil,
-                usuario.senhaTemporaria
+                gerarToken(usuario),
+                Boolean.TRUE.equals(usuario.senhaTemporaria)
         );
     }
+
     @PUT
     @Path("/trocar-senha")
+    @RolesAllowed("USER")
     @Transactional
     public Response trocarSenha(TrocarSenhaRequest request) {
         if (request == null || request.usuarioId == null) {
@@ -118,6 +156,8 @@ public class AuthController {
                     .entity("Usuário inválido.")
                     .build();
         }
+
+        validarUsuarioDoToken(request.usuarioId);
 
         Usuario usuario = usuarioRepository.findById(request.usuarioId);
 
@@ -149,5 +189,26 @@ public class AuthController {
         usuario.senhaTemporaria = false;
 
         return Response.ok("Senha alterada com sucesso.").build();
+    }
+
+    private String gerarToken(Usuario usuario) {
+        return Jwt
+                .issuer("renegados-jwt")
+                .subject(String.valueOf(usuario.id))
+                .upn(usuario.email)
+                .groups(Set.of("USER"))
+                .claim("nome", usuario.nome)
+                .claim("email", usuario.email)
+                .claim("nickname", usuario.nickname)
+                .expiresIn(Duration.ofHours(8))
+                .sign();
+    }
+
+    private void validarUsuarioDoToken(Long usuarioId) {
+        Long usuarioIdToken = Long.valueOf(jwt.getSubject());
+
+        if (!usuarioIdToken.equals(usuarioId)) {
+            throw new ForbiddenException("Você não pode acessar dados de outro usuário.");
+        }
     }
 }
