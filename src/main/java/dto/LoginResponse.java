@@ -10,6 +10,7 @@ public class LoginResponse {
     public Integer nivel;
     public Integer xp;
     public String fotoPerfil;
+    public Boolean deveTrocarSenha;
 
     public LoginResponse(
             Long id,
@@ -18,7 +19,9 @@ public class LoginResponse {
             String nickname,
             Integer nivel,
             Integer xp,
-            String fotoPerfil
+            String fotoPerfil,
+            Boolean deveTrocarSenha
+
     ) {
         this.id = id;
         this.nome = nome;
@@ -27,5 +30,7 @@ public class LoginResponse {
         this.nivel = nivel;
         this.xp = xp;
         this.fotoPerfil = fotoPerfil;
+        this.deveTrocarSenha = deveTrocarSenha;
+
     }
 }

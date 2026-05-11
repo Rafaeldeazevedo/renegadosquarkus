@@ -18,6 +18,10 @@ public class Usuario extends PanacheEntity {
         @Column(nullable = false)
         public String senha;
 
+        @Column(name = "senha_temporaria")
+        public Boolean senhaTemporaria = false;
+
+
         public String nickname;
 
         @Column(nullable = false)
