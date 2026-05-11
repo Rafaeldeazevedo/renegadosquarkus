@@ -59,7 +59,6 @@ public class AuthController {
                     .entity("Email ou senha inválidos.")
                     .build();
         }
-
         String token = gerarToken(usuario);
 
         LoginResponse response = new LoginResponse(

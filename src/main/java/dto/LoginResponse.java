@@ -1,6 +1,5 @@
 package dto;
 
-
 public class LoginResponse {
 
     public Long id;
@@ -9,9 +8,12 @@ public class LoginResponse {
     public String nickname;
     public Integer nivel;
     public Integer xp;
-    public  String token;
     public String fotoPerfil;
+    public String token;
     public Boolean deveTrocarSenha;
+
+    public LoginResponse() {
+    }
 
     public LoginResponse(
             Long id,
@@ -20,10 +22,8 @@ public class LoginResponse {
             String nickname,
             Integer nivel,
             Integer xp,
-            String token,
             String fotoPerfil,
             Boolean deveTrocarSenha
-
     ) {
         this.id = id;
         this.nome = nome;
@@ -31,9 +31,29 @@ public class LoginResponse {
         this.nickname = nickname;
         this.nivel = nivel;
         this.xp = xp;
-        this.token = token;
         this.fotoPerfil = fotoPerfil;
         this.deveTrocarSenha = deveTrocarSenha;
+    }
 
+    public LoginResponse(
+            Long id,
+            String nome,
+            String email,
+            String nickname,
+            Integer nivel,
+            Integer xp,
+            String fotoPerfil,
+            String token,
+            Boolean deveTrocarSenha
+    ) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.nickname = nickname;
+        this.nivel = nivel;
+        this.xp = xp;
+        this.fotoPerfil = fotoPerfil;
+        this.token = token;
+        this.deveTrocarSenha = deveTrocarSenha;
     }
 }
