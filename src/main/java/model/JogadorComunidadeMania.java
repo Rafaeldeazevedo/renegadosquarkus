@@ -19,6 +19,9 @@ public class JogadorComunidadeMania {
     @JoinColumn(name = "personagem_id")
     public Personagem personagem;
 
+    @Column(name = "criado_por_nickname")
+    public String criadoPorNickname;
+
     @Column(name = "descricao", nullable = false, columnDefinition = "TEXT")
     public String descricao;
 }

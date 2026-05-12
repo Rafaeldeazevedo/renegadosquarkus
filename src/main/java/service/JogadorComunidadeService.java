@@ -64,7 +64,11 @@ public class JogadorComunidadeService {
     public List<ManiaResponse> listarManias(Long jogadorId, Long personagemId) {
         return maniaRepository.buscarPorJogadorEPersonagem(jogadorId, personagemId)
                 .stream()
-                .map(mania -> new ManiaResponse(mania.id, mania.descricao))
+                .map(mania -> new ManiaResponse(
+                        mania.id,
+                        mania.descricao,
+                        mania.criadoPorNickname
+                ))
                 .toList();
     }
 
@@ -316,10 +320,17 @@ public class JogadorComunidadeService {
         mania.jogador = jogador;
         mania.personagem = personagem;
         mania.descricao = request.descricao.trim();
+        mania.criadoPorNickname = request.criadoPorNickname != null && !request.criadoPorNickname.trim().isEmpty()
+                ? request.criadoPorNickname.trim()
+                : "Jogador Renegado";
 
         maniaRepository.persist(mania);
 
-        return new ManiaResponse(mania.id, mania.descricao);
+        return new ManiaResponse(
+                mania.id,
+                mania.descricao,
+                mania.criadoPorNickname
+        );
     }
 
     @Transactional
@@ -345,6 +356,10 @@ public class JogadorComunidadeService {
 
         mania.descricao = request.descricao.trim();
 
-        return new ManiaResponse(mania.id, mania.descricao);
+        return new ManiaResponse(
+                mania.id,
+                mania.descricao,
+                mania.criadoPorNickname
+        );
     }
 }
