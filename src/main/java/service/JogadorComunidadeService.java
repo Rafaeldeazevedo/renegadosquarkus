@@ -23,7 +23,6 @@ public class JogadorComunidadeService {
     @Inject
     JogadorComunidadeManiaRepository maniaRepository;
 
-
     @Inject
     JogadorComunidadePersonagemRepository jogadorPersonagemRepository;
 
@@ -164,6 +163,72 @@ public class JogadorComunidadeService {
                 personagensResponse
         );
     }
+
+    @Transactional
+    public JogadorComunidadeResponse atualizar(Long id, JogadorComunidadeRequest request) {
+        if (request.nome == null || request.nome.trim().isEmpty()) {
+            throw new BadRequestException("Nome do jogador é obrigatório.");
+        }
+
+        if (request.tekkenId == null || request.tekkenId.trim().isEmpty()) {
+            throw new BadRequestException("Tekken ID é obrigatório.");
+        }
+
+        if (request.personagensIds == null || request.personagensIds.isEmpty()) {
+            throw new BadRequestException("Selecione pelo menos um personagem.");
+        }
+
+        JogadorComunidade jogador = jogadorRepository.findById(id);
+
+        if (jogador == null) {
+            throw new NotFoundException("Jogador não encontrado.");
+        }
+
+        jogador.nome = request.nome.trim();
+        jogador.tekkenId = request.tekkenId.trim();
+        jogador.foto = request.foto;
+
+        List<JogadorComunidadePersonagem> vinculosAntigos =
+                jogadorPersonagemRepository.buscarPorJogadorId(jogador.id);
+
+        for (JogadorComunidadePersonagem vinculo : vinculosAntigos) {
+            jogadorPersonagemRepository.delete(vinculo);
+        }
+
+        for (Long personagemId : request.personagensIds) {
+            Personagem personagem = personagemRepository.findById(personagemId);
+
+            if (personagem == null) {
+                throw new NotFoundException("Personagem não encontrado: " + personagemId);
+            }
+
+            JogadorComunidadePersonagem novoVinculo = new JogadorComunidadePersonagem();
+            novoVinculo.setJogador(jogador);
+            novoVinculo.setPersonagem(personagem);
+
+            jogadorPersonagemRepository.persist(novoVinculo);
+        }
+
+        List<PersonagemComunidadeResponse> personagensResponse = jogadorPersonagemRepository
+                .buscarPorJogadorId(jogador.id)
+                .stream()
+                .map(vinculo -> new PersonagemComunidadeResponse(
+                        vinculo.getPersonagem().id,
+                        vinculo.getPersonagem().nome,
+                        vinculo.getPersonagem().imagem
+                ))
+                .toList();
+
+        return new JogadorComunidadeResponse(
+                jogador.id,
+                jogador.nome,
+                jogador.tekkenId,
+                jogador.foto,
+                personagensResponse.size(),
+                personagensResponse
+        );
+    }
+
     @Transactional
     public PlayerStyleResponse salvarPlayerStyle(
             Long jogadorId,
@@ -219,6 +284,7 @@ public class JogadorComunidadeService {
                 ))
                 .toList();
     }
+
     @Transactional
     public ManiaResponse criarMania(Long jogadorId, Long personagemId, ManiaRequest request) {
         if (request.descricao == null || request.descricao.trim().isEmpty()) {
@@ -255,6 +321,7 @@ public class JogadorComunidadeService {
             throw new NotFoundException("Mania não encontrada.");
         }
     }
+
     @Transactional
     public ManiaResponse alterarMania(Long maniaId, ManiaRequest request) {
         if (request.descricao == null || request.descricao.trim().isEmpty()) {

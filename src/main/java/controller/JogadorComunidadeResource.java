@@ -14,8 +14,6 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class JogadorComunidadeResource {
 
-
-
     @Inject
     JogadorComunidadeService jogadorComunidadeService;
 
@@ -36,17 +34,24 @@ public class JogadorComunidadeResource {
         return jogadorComunidadeService.buscarPlayerStyle(jogadorId, personagemId);
     }
 
-
     @GET
     @Path("/{id}")
     public JogadorComunidadeResponse buscarPorId(@PathParam("id") Long id) {
         return jogadorComunidadeService.buscarPorId(id);
     }
 
-
     @POST
     public JogadorComunidadeResponse cadastrar(JogadorComunidadeRequest request) {
         return jogadorComunidadeService.cadastrar(request);
+    }
+
+    @PUT
+    @Path("/{id}")
+    public JogadorComunidadeResponse atualizar(
+            @PathParam("id") Long id,
+            JogadorComunidadeRequest request
+    ) {
+        return jogadorComunidadeService.atualizar(id, request);
     }
 
     @GET
@@ -70,6 +75,7 @@ public class JogadorComunidadeResource {
     ) {
         return jogadorComunidadeService.salvarPlayerStyle(jogadorId, personagemId, request);
     }
+
     @GET
     @Path("/{jogadorId}/personagens/{personagemId}/manias")
     public List<ManiaResponse> listarManias(
@@ -103,5 +109,4 @@ public class JogadorComunidadeResource {
     public void excluirMania(@PathParam("maniaId") Long maniaId) {
         jogadorComunidadeService.excluirMania(maniaId);
     }
-
 }
