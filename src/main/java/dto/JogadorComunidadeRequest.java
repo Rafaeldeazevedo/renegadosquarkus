@@ -8,4 +8,6 @@ public class JogadorComunidadeRequest {
     public String tekkenId;
     public String foto;
     public List<Long> personagensIds;
+    public String criadoPorNickname;
+
 }

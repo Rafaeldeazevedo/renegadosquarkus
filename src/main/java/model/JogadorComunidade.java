@@ -18,8 +18,13 @@ public class JogadorComunidade {
     @Column(name = "tekken_id", nullable = false, length = 100)
     public String tekkenId;
 
+
     @Column(name = "foto", length = 255)
     public String foto;
+
+    @Column(name = "criado_por_nickname")
+    public String criadoPorNickname;
+
 
     @OneToMany(mappedBy = "jogador", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<JogadorComunidadePersonagem> personagens = new ArrayList<>();

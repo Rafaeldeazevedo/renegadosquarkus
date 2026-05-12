@@ -49,7 +49,8 @@ public class JogadorComunidadeService {
                             jogador.tekkenId,
                             jogador.foto,
                             personagens.size(),
-                            personagens
+                            personagens,
+                            jogador.criadoPorNickname
                     );
                 })
                 .toList();
@@ -90,7 +91,8 @@ public class JogadorComunidadeService {
                 jogador.tekkenId,
                 jogador.foto,
                 personagens.size(),
-                personagens
+                personagens,
+                jogador.criadoPorNickname
         );
     }
 
@@ -127,6 +129,7 @@ public class JogadorComunidadeService {
         jogador.nome = request.nome.trim();
         jogador.tekkenId = request.tekkenId.trim();
         jogador.foto = request.foto;
+        jogador.criadoPorNickname = request.criadoPorNickname;
 
         jogadorRepository.persist(jogador);
 
@@ -160,7 +163,8 @@ public class JogadorComunidadeService {
                 jogador.tekkenId,
                 jogador.foto,
                 personagensResponse.size(),
-                personagensResponse
+                personagensResponse,
+                jogador.criadoPorNickname
         );
     }
 
@@ -187,6 +191,10 @@ public class JogadorComunidadeService {
         jogador.nome = request.nome.trim();
         jogador.tekkenId = request.tekkenId.trim();
         jogador.foto = request.foto;
+
+        if (request.criadoPorNickname != null && !request.criadoPorNickname.trim().isEmpty()) {
+            jogador.criadoPorNickname = request.criadoPorNickname.trim();
+        }
 
         List<JogadorComunidadePersonagem> vinculosAntigos =
                 jogadorPersonagemRepository.buscarPorJogadorId(jogador.id);
@@ -225,7 +233,8 @@ public class JogadorComunidadeService {
                 jogador.tekkenId,
                 jogador.foto,
                 personagensResponse.size(),
-                personagensResponse
+                personagensResponse,
+                jogador.criadoPorNickname
         );
     }
 
