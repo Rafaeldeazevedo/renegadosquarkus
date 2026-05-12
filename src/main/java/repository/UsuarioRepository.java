@@ -9,6 +9,13 @@ import model.Usuario;
 public class UsuarioRepository implements PanacheRepository<Usuario> {
 
     public Usuario buscarPorEmail(String email) {
-        return find("email", email).firstResult();
+        if (email == null) {
+            return null;
+        }
+
+        String emailTratado = email.trim().toLowerCase();
+
+        return find("LOWER(email) = ?1", emailTratado)
+                .firstResult();
     }
 }
