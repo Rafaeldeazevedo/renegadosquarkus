@@ -1,5 +1,6 @@
 package dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JogadorComunidadeResponse {
@@ -11,6 +12,7 @@ public class JogadorComunidadeResponse {
     public Integer totalPersonagens;
     public List<PersonagemComunidadeResponse> personagens;
     public String criadoPorNickname;
+    public LocalDateTime criadoEm;
 
     public JogadorComunidadeResponse(
             Long id,
@@ -19,7 +21,8 @@ public class JogadorComunidadeResponse {
             String foto,
             Integer totalPersonagens,
             List<PersonagemComunidadeResponse> personagens,
-            String criadoPorNickname
+            String criadoPorNickname,
+            LocalDateTime criadoEm
     ) {
         this.id = id;
         this.nome = nome;
@@ -28,5 +31,6 @@ public class JogadorComunidadeResponse {
         this.totalPersonagens = totalPersonagens;
         this.personagens = personagens;
         this.criadoPorNickname = criadoPorNickname;
+        this.criadoEm = criadoEm;
     }
 }

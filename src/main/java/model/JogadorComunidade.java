@@ -1,6 +1,8 @@
 package model;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,21 @@ public class JogadorComunidade {
 
     @Column(name = "criado_por_nickname")
     public String criadoPorNickname;
+
+    @Column(name = "criado_em")
+    public LocalDateTime criadoEm;
+
+    @PrePersist
+    public void prePersist() {
+        if (criadoEm == null) {
+            criadoEm = LocalDateTime.now();
+        }
+
+        if (criadoPorNickname == null || criadoPorNickname.trim().isEmpty()) {
+            criadoPorNickname = "";
+        }
+    }
+
 
 
     @OneToMany(mappedBy = "jogador", cascade = CascadeType.ALL, orphanRemoval = true)

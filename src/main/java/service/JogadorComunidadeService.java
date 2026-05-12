@@ -50,7 +50,8 @@ public class JogadorComunidadeService {
                             jogador.foto,
                             personagens.size(),
                             personagens,
-                            jogador.criadoPorNickname
+                            jogador.criadoPorNickname,
+                            jogador.criadoEm
                     );
                 })
                 .toList();
@@ -96,7 +97,8 @@ public class JogadorComunidadeService {
                 jogador.foto,
                 personagens.size(),
                 personagens,
-                jogador.criadoPorNickname
+                jogador.criadoPorNickname,
+                jogador.criadoEm
         );
     }
 
@@ -168,7 +170,8 @@ public class JogadorComunidadeService {
                 jogador.foto,
                 personagensResponse.size(),
                 personagensResponse,
-                jogador.criadoPorNickname
+                jogador.criadoPorNickname,
+                jogador.criadoEm
         );
     }
 
@@ -270,7 +273,8 @@ public class JogadorComunidadeService {
                 jogador.foto,
                 personagensResponse.size(),
                 personagensResponse,
-                jogador.criadoPorNickname
+                jogador.criadoPorNickname,
+                jogador.criadoEm
         );
     }
 
