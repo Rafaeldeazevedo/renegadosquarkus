@@ -21,6 +21,8 @@ public class Usuario extends PanacheEntity {
         @Column(name = "senha_temporaria")
         public Boolean senhaTemporaria = false;
 
+        @Column(name = "perfil")
+        public String perfil = "USER";
 
         public String nickname;
 

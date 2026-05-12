@@ -173,6 +173,38 @@ public class JogadorComunidadeService {
     }
 
     @Transactional
+    public void excluirJogador(Long id) {
+        JogadorComunidade jogador = jogadorRepository.findById(id);
+
+        if (jogador == null) {
+            throw new NotFoundException("Jogador não encontrado.");
+        }
+
+        List<JogadorComunidadeMania> manias =
+                maniaRepository.buscarPorJogadorId(id);
+
+        for (JogadorComunidadeMania mania : manias) {
+            maniaRepository.delete(mania);
+        }
+
+        List<JogadorComunidadePlayerStyle> styles =
+                playerStyleRepository.buscarPorJogadorId(id);
+
+        for (JogadorComunidadePlayerStyle style : styles) {
+            playerStyleRepository.delete(style);
+        }
+
+        List<JogadorComunidadePersonagem> vinculos =
+                jogadorPersonagemRepository.buscarPorJogadorId(id);
+
+        for (JogadorComunidadePersonagem vinculo : vinculos) {
+            jogadorPersonagemRepository.delete(vinculo);
+        }
+
+        jogadorRepository.delete(jogador);
+    }
+
+    @Transactional
     public JogadorComunidadeResponse atualizar(Long id, JogadorComunidadeRequest request) {
         if (request.nome == null || request.nome.trim().isEmpty()) {
             throw new BadRequestException("Nome do jogador é obrigatório.");

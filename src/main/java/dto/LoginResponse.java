@@ -11,6 +11,7 @@ public class LoginResponse {
     public String fotoPerfil;
     public String token;
     public Boolean deveTrocarSenha;
+    public String perfil;
 
     public LoginResponse() {
     }
@@ -44,7 +45,8 @@ public class LoginResponse {
             Integer xp,
             String fotoPerfil,
             String token,
-            Boolean deveTrocarSenha
+            Boolean deveTrocarSenha,
+            String perfil
     ) {
         this.id = id;
         this.nome = nome;
@@ -55,5 +57,6 @@ public class LoginResponse {
         this.fotoPerfil = fotoPerfil;
         this.token = token;
         this.deveTrocarSenha = deveTrocarSenha;
+        this.perfil = perfil;
     }
 }

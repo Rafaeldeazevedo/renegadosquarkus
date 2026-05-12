@@ -109,4 +109,10 @@ public class JogadorComunidadeResource {
     public void excluirMania(@PathParam("maniaId") Long maniaId) {
         jogadorComunidadeService.excluirMania(maniaId);
     }
+
+    @DELETE
+    @Path("/{id}")
+    public void excluirJogador(@PathParam("id") Long id) {
+        jogadorComunidadeService.excluirJogador(id);
+    }
 }

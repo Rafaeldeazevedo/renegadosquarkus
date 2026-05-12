@@ -70,7 +70,8 @@ public class AuthController {
                 usuario.xp,
                 usuario.fotoPerfil,
                 token,
-                Boolean.TRUE.equals(usuario.senhaTemporaria)
+                Boolean.TRUE.equals(usuario.senhaTemporaria),
+                usuario.perfil
         );
 
         return Response.ok(response).build();
@@ -104,7 +105,8 @@ public class AuthController {
                 usuario.xp,
                 usuario.fotoPerfil,
                 null,
-                Boolean.TRUE.equals(usuario.senhaTemporaria)
+                Boolean.TRUE.equals(usuario.senhaTemporaria),
+                usuario.perfil
         );
     }
 
@@ -141,7 +143,8 @@ public class AuthController {
                 usuario.xp,
                 usuario.fotoPerfil,
                 gerarToken(usuario),
-                Boolean.TRUE.equals(usuario.senhaTemporaria)
+                Boolean.TRUE.equals(usuario.senhaTemporaria),
+                usuario.perfil
         );
     }
 

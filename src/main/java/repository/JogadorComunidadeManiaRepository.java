@@ -13,4 +13,8 @@ public class JogadorComunidadeManiaRepository implements PanacheRepository<Jogad
     public List<JogadorComunidadeMania> buscarPorJogadorEPersonagem(Long jogadorId, Long personagemId) {
         return list("jogador.id = ?1 and personagem.id = ?2 order by id asc", jogadorId, personagemId);
     }
+
+    public List<JogadorComunidadeMania> buscarPorJogadorId(Long jogadorId) {
+        return list("jogador.id", jogadorId);
+    }
 }
